@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Análisis de Proveedores · Lote 0067 · La Flauta</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --s0:#050809;--s1:#0b1015;--s2:#111a22;--s3:#172330;--s4:#1e2d3d;
+  --b1:#1c2b39;--b2:#27384a;--b3:#34495e;
+  --t0:#f4f7fa;--t1:#c8d6e5;--t2:#8395a7;--t3:#576574;
+  --green:#00d2a0;--green-d:rgba(0,210,160,.1);
+  --blue:#5f9eff;--blue-d:rgba(95,158,255,.1);
+  --amber:#ffb142;--amber-d:rgba(255,177,66,.1);
+  --red:#ff6b6b;--red-d:rgba(255,107,107,.1);
+  --purple:#a29bfe;--purple-d:rgba(162,155,254,.1);
+  --cyan:#00cec9;--cyan-d:rgba(0,206,201,.1);
+  --r:16px;--rs:10px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--s0);color:var(--t0);min-height:100vh;-webkit-font-smoothing:antialiased}
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--b2);border-radius:3px}
+.num{font-family:'Space Mono',monospace;font-variant-numeric:tabular-nums}
+
+/* ── HEADER ── */
+.hdr{position:sticky;top:0;z-index:100;backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);background:rgba(5,8,9,.82);border-bottom:1px solid var(--b1)}
+.hdr-inner{max-width:1440px;margin:0 auto;padding:.85rem 2rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap}
+.hdr-left{display:flex;align-items:center;gap:.75rem}
+.hdr-logo{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,var(--green),#006d52);display:grid;place-items:center;font-family:'Space Mono';font-weight:700;font-size:.65rem;color:#fff;letter-spacing:1px;flex-shrink:0}
+.hdr-title{font-size:.9rem;font-weight:600;letter-spacing:-.01em}
+.hdr-title span{color:var(--t2);font-weight:400}
+.hdr-pills{display:flex;gap:.4rem;flex-wrap:wrap}
+.pill{font-size:.6rem;letter-spacing:.04em;padding:.25rem .6rem;border-radius:20px;border:1px solid var(--b2);color:var(--t2)}
+.pill-g{border-color:rgba(0,210,160,.3);color:var(--green);background:var(--green-d)}
+
+/* ── PAGE ── */
+.page{max-width:1440px;margin:0 auto;padding:1.5rem 2rem 4rem}
+.sec{margin-bottom:2.5rem}
+.sec-h{display:flex;align-items:center;gap:.75rem;margin-bottom:1.25rem}
+.sec-h::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,var(--b2),transparent)}
+.sec-tag{font-size:.58rem;letter-spacing:2px;text-transform:uppercase;color:var(--t3);white-space:nowrap}
+
+/* ── KPI STRIP ── */
+.kpi-strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:.75rem;margin-bottom:2.5rem}
+.k{background:var(--s2);border:1px solid var(--b1);border-radius:var(--r);padding:1.1rem 1.25rem;position:relative;overflow:hidden;transition:border-color .2s,transform .15s}
+.k:hover{border-color:var(--b3);transform:translateY(-1px)}
+.k::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;border-radius:var(--r) var(--r) 0 0}
+.c-green::before{background:var(--green)}
+.c-blue::before{background:var(--blue)}
+.c-amber::before{background:var(--amber)}
+.c-purple::before{background:var(--purple)}
+.c-cyan::before{background:var(--cyan)}
+.k-lbl{font-size:.57rem;letter-spacing:2px;text-transform:uppercase;color:var(--t3);margin-bottom:.5rem}
+.k-val{font-size:1.65rem;font-weight:700;line-height:1.1;letter-spacing:-.025em}
+.k-sub{font-size:.7rem;color:var(--t2);margin-top:.25rem}
+
+/* ── PROVIDER CARDS (5 principales) ── */
+.prov-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:.75rem;margin-bottom:2.5rem}
+
+.pc{background:var(--s2);border:1px solid var(--b1);border-radius:var(--r);overflow:hidden;transition:border-color .2s,transform .15s}
+.pc:hover{border-color:var(--b3);transform:translateY(-2px)}
+
+.pc-top{padding:1.1rem 1.25rem .9rem;border-bottom:1px solid var(--b1);display:flex;justify-content:space-between;align-items:flex-start;gap:.75rem}
+.pc-name{font-size:.88rem;font-weight:600;color:var(--t0);line-height:1.25}
+.pc-fecha{display:block;font-size:.62rem;color:var(--t3);margin-top:3px;font-family:'Space Mono',monospace}
+.pc-cab{text-align:right;flex-shrink:0}
+.pc-cab-num{font-size:2rem;font-weight:800;line-height:1;font-family:'Space Mono',monospace}
+.pc-cab-lbl{font-size:.57rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--t3);margin-top:2px}
+
+.pc-metrics{display:grid;grid-template-columns:1fr 1fr 1fr;padding:.9rem 1.25rem;gap:.85rem;border-bottom:1px solid var(--b1)}
+.pm{display:flex;flex-direction:column;gap:.25rem}
+.pm-lbl{font-size:.57rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--t3)}
+.pm-val{font-size:.95rem;font-weight:600;font-family:'Space Mono',monospace;line-height:1}
+
+/* bar ganancia peso */
+.pc-bar{padding:.75rem 1.25rem;border-bottom:1px solid var(--b1)}
+.pc-bar-top{display:flex;justify-content:space-between;font-size:.6rem;color:var(--t3);margin-bottom:.45rem;letter-spacing:.04em}
+.pc-bar-track{height:5px;background:var(--b2);border-radius:2px;overflow:hidden}
+.pc-bar-fill{height:100%;border-radius:2px;transition:width .8s cubic-bezier(.4,0,.2,1)}
+
+.pc-bottom{display:grid;grid-template-columns:1fr 1fr;padding:.85rem 1.25rem;gap:.75rem;background:rgba(0,0,0,.15)}
+.pb-item{display:flex;flex-direction:column;gap:.2rem}
+.pb-lbl{font-size:.57rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--t3)}
+.pb-val{font-size:.85rem;font-family:'Space Mono',monospace;font-weight:400}
+
+/* ── DAYS DOT ── */
+.dias-wrap{display:flex;align-items:center;gap:5px;justify-content:flex-end}
+.dias-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+
+/* ── FULL TABLE ── */
+.table-wrap{background:var(--s2);border:1px solid var(--b1);border-radius:var(--r);overflow:hidden}
+.table-scroll{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:860px}
+thead th{font-size:.57rem;letter-spacing:1.8px;text-transform:uppercase;color:var(--t3);padding:.85rem 1rem;text-align:right;border-bottom:1px solid var(--b2);background:var(--s3);white-space:nowrap;font-weight:500}
+thead th:first-child{text-align:left}
+thead th.grp{border-left:1px solid var(--b2)}
+tbody tr{border-bottom:1px solid rgba(28,43,57,.6);transition:background .1s}
+tbody tr:hover{background:rgba(23,35,48,.5)}
+tbody tr.tot{background:var(--s3);border-top:1px solid var(--b2)}
+tbody td{padding:.85rem 1rem;text-align:right;font-size:.78rem;color:var(--t1);white-space:nowrap}
+tbody td:first-child{text-align:left;color:var(--t0)}
+tbody td.grp{border-left:1px solid rgba(28,43,57,.5)}
+.pn{font-size:.82rem;font-weight:500;color:var(--t0);line-height:1.2}
+.pf{display:block;font-size:.62rem;color:var(--t3);margin-top:2px;font-family:'Space Mono',monospace}
+
+.gbar{display:flex;align-items:center;gap:7px;justify-content:flex-end}
+.gbar-t{width:60px;height:4px;background:var(--b2);border-radius:2px;flex-shrink:0}
+.gbar-f{height:100%;border-radius:2px;background:var(--green)}
+.gbar-v{font-size:.78rem;font-weight:500;color:var(--green);font-family:'Space Mono',monospace;min-width:48px;text-align:right}
+
+.rc{display:inline-block;padding:.18rem .5rem;border-radius:6px;font-size:.65rem;font-weight:600;font-family:'Space Mono',monospace}
+.rc-hi{background:var(--green-d);color:var(--green);border:1px solid rgba(0,210,160,.2)}
+.rc-md{background:var(--amber-d);color:var(--amber);border:1px solid rgba(255,177,66,.2)}
+.rc-lo{background:var(--red-d);color:var(--red);border:1px solid rgba(255,107,107,.2)}
+
+.c-g{color:var(--green)!important;font-weight:500}
+.c-b{color:var(--blue)!important}
+.c-m{color:var(--t3)!important}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.k,.pc{animation:fadeUp .4s ease both}
+
+@media(max-width:900px){
+  .prov-cards{grid-template-columns:1fr}
+  .kpi-strip{grid-template-columns:repeat(2,1fr)}
+}
+</style>
+</head>
+<body>
+
+<header class="hdr">
+  <div class="hdr-inner">
+    <div class="hdr-left">
+      <div class="hdr-logo">LFA</div>
+      <div class="hdr-title">La Flauta <span>· Análisis de Proveedores · Lote 0067</span></div>
+    </div>
+    <div class="hdr-pills">
+      <span class="pill">14.04.2026</span>
+      <span class="pill">Torillos</span>
+      <span class="pill pill-g">286 animales</span>
+      <span class="pill">15 proveedores</span>
+      <span class="pill">23.6 Bs/kg · 6.96 Bs/USD</span>
+    </div>
+  </div>
+</header>
+
+<div class="page">
+
+<!-- ── KPIs DE LA VENTA ── -->
+<div class="sec">
+  <div class="sec-h"><span class="sec-tag">Resultado de la venta</span></div>
+  <div class="kpi-strip">
+    <div class="k c-green" style="animation-delay:.05s">
+      <div class="k-lbl">Animales vendidos</div>
+      <div class="k-val num">286</div>
+      <div class="k-sub">15 orígenes distintos</div>
+    </div>
+    <div class="k c-blue" style="animation-delay:.1s">
+      <div class="k-lbl">Ingreso con Desbaste</div>
+      <div class="k-val num" id="k-ing">—</div>
+      <div class="k-sub" id="k-ing-usd">—</div>
+    </div>
+    <div class="k c-purple" style="animation-delay:.15s">
+      <div class="k-lbl">Peso salida neto (−5%)</div>
+      <div class="k-val num" id="k-psal">—</div>
+      <div class="k-sub" id="k-psal-sub">—</div>
+    </div>
+    <div class="k c-green" style="animation-delay:.2s">
+      <div class="k-lbl">Ganancia de peso media</div>
+      <div class="k-val num" id="k-gkm">—</div>
+      <div class="k-sub">kg promedio / animal</div>
+    </div>
+    <div class="k c-amber" style="animation-delay:.25s">
+      <div class="k-lbl">Días promedio campo</div>
+      <div class="k-val num" id="k-dias">—</div>
+      <div class="k-sub">ponderado por cabezas</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── 5 PRINCIPALES PROVEEDORES ── -->
+<div class="sec">
+  <div class="sec-h"><span class="sec-tag">5 principales proveedores por volumen</span></div>
+  <div class="prov-cards" id="provCards"></div>
+</div>
+
+<!-- ── TABLA COMPLETA ── -->
+<div class="sec">
+  <div class="sec-h"><span class="sec-tag">Todos los proveedores</span></div>
+  <div class="table-wrap">
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>Proveedor</th>
+            <th>Cab.</th>
+            <th>Días campo</th>
+            <th class="grp">Peso entrada</th>
+            <th>Salida bruto</th>
+            <th>Salida neto −5%</th>
+            <th>Gan. peso</th>
+            <th>GDP</th>
+            <th class="grp">Ingreso/cab Bs</th>
+            <th>Ingreso/cab USD</th>
+            <th class="grp">ROI</th>
+            <th>ROI / año</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<script>
+const TC       = 6.96;
+const PV_BS    = 23.6;   // precio venta Bs/kg
+const DESBASTE = 0.05;   // 5% pérdida de peso en tránsito
+
+const RAW = [
+  {p:'Casa Blanca (27-nov-24)', f:'27/11/2024', c:116, d:251, pi:273.8, pv:419.4, gdp:0.580, inv:426996},
+  {p:'Guiteras (mar-25)',        f:'23/03/2025', c:73,  d:369, pi:230.2, pv:410.5, gdp:0.489, inv:328500},
+  {p:'Subasta (dic-24)',         f:'01/12/2024', c:33,  d:488, pi:188.3, pv:422.5, gdp:0.480, inv:108669},
+  {p:'Fercogan (may-25)',        f:'01/05/2025', c:13,  d:348, pi:229.5, pv:405.3, gdp:0.505, inv:69290},
+  {p:'Casa Blanca (abr-24)',     f:'30/04/2024', c:10,  d:364, pi:294.6, pv:428.1, gdp:0.366, inv:28570},
+  {p:'Nanchi (may-25)',          f:'01/05/2025', c:9,   d:348, pi:261.2, pv:430.1, gdp:0.485, inv:49860},
+  {p:'Subasta (dic-25)',         f:'01/12/2025', c:6,   d:116, pi:319.7, pv:400.3, gdp:0.695, inv:19758},
+  {p:'Miguel Guiteras (jun-25)', f:'01/06/2025', c:5,   d:288, pi:276.4, pv:422.6, gdp:0.508, inv:15065},
+  {p:'Casa Blanca (may-24)',     f:'01/05/2024', c:5,   d:707, pi:162.0, pv:459.8, gdp:0.421, inv:14285},
+  {p:'Alfredo Gonzales (nov-24)',f:'20/11/2024', c:5,   d:372, pi:277.8, pv:453.8, gdp:0.473, inv:24065},
+  {p:'Miguel Guiteras (may-25)', f:'01/05/2025', c:3,   d:276, pi:310.3, pv:437.7, gdp:0.462, inv:9039},
+  {p:'Senepol (nov-24)',         f:'20/11/2024', c:3,   d:349, pi:253.7, pv:402.7, gdp:0.427, inv:9045},
+  {p:'Nanchi (abr-25)',          f:'11/04/2025', c:2,   d:348, pi:267.5, pv:428.5, gdp:0.463, inv:11080},
+  {p:'Luis Tavera (abr-24)',     f:'01/04/2024', c:2,   d:706, pi:199.8, pv:461.0, gdp:0.370, inv:5400},
+  {p:'Rodeo (dic-23)',           f:'01/12/2023', c:1,   d:851, pi:184.0, pv:385.0, gdp:0.236, inv:2087},
+];
+
+// Calcular desbaste y derivados para cada proveedor
+const DATA = RAW.map(d => {
+  const pvNeto = d.pv * (1 - DESBASTE);          // peso neto cobrado
+  const gk     = d.pv - d.pi;                     // ganancia bruta de peso
+  const gkNeta = pvNeto - d.pi;                   // ganancia neta (sobre peso neto)
+  const ing    = pvNeto * PV_BS * d.c;            // ingreso con desbaste
+  const roi    = ((ing - d.inv) / d.inv * 100);
+  const roia   = roi / (d.d / 365);
+  return {...d, pvNeto, gk, gkNeta, ing, roi: +roi.toFixed(1), roia: +roia.toFixed(1)};
+});
+
+const MAX_GK   = Math.max(...DATA.map(d=>d.gk));
+const totCab   = DATA.reduce((s,d)=>s+d.c,0);
+const totIng   = DATA.reduce((s,d)=>s+d.ing,0);
+const wavg     = key => DATA.reduce((s,d)=>s+d[key]*d.c,0)/totCab;
+
+const f0   = n => new Intl.NumberFormat('es-BO',{maximumFractionDigits:0}).format(Math.round(n));
+const fBSk = n => n>=1000000 ? (n/1e6).toFixed(2)+'M Bs' : f0(n)+' Bs';
+const fU   = n => f0(n/TC);
+const dcol = d => d>500?'var(--red)':d>300?'var(--amber)':'var(--green)';
+const rcls = r => r>=200?'rc-hi':r>=100?'rc-md':'rc-lo';
+
+// KPIs
+document.getElementById('k-ing').textContent      = fBSk(totIng);
+document.getElementById('k-ing-usd').textContent  = 'USD '+ fU(totIng);
+const pvNetoProm = wavg('pvNeto');
+const pvBrutoProm = wavg('pv');
+document.getElementById('k-psal').textContent     = pvNetoProm.toFixed(1)+' kg';
+document.getElementById('k-psal-sub').textContent = 'bruto: '+pvBrutoProm.toFixed(1)+' kg · −5% desbaste';
+document.getElementById('k-gkm').textContent      = '+'+wavg('gk').toFixed(1)+' kg';
+document.getElementById('k-dias').textContent     = Math.round(wavg('d'))+' días';
+
+// ── 5 PRINCIPALES CARDS ──
+const top5 = DATA.slice(0,5);
+const colors = ['--green','--blue','--amber','--purple','--cyan'];
+const cardsEl = document.getElementById('provCards');
+
+top5.forEach((d,i)=>{
+  const col = `var(${colors[i]})`;
+  const ingCab = d.ing/d.c;
+  const card = document.createElement('div');
+  card.className = 'pc';
+  card.style.animationDelay = (i*0.07+0.1)+'s';
+  card.style.borderTopColor = col;
+  card.style.borderTopWidth = '2px';
+  card.style.borderTopStyle = 'solid';
+  card.innerHTML = `
+    <div class="pc-top">
+      <div>
+        <div class="pc-name">${d.p}</div>
+        <span class="pc-fecha">Compra ${d.f}</span>
+      </div>
+      <div class="pc-cab">
+        <div class="pc-cab-num" style="color:${col}">${d.c}</div>
+        <div class="pc-cab-lbl">cabezas</div>
+      </div>
+    </div>
+    <div class="pc-metrics">
+      <div class="pm">
+        <span class="pm-lbl">Días campo</span>
+        <span class="pm-val" style="color:${dcol(d.d)}">${d.d}</span>
+      </div>
+      <div class="pm">
+        <span class="pm-lbl">Peso entrada</span>
+        <span class="pm-val">${d.pi.toFixed(1)} kg</span>
+      </div>
+      <div class="pm">
+        <span class="pm-lbl">Salida bruto</span>
+        <span class="pm-val">${d.pv.toFixed(1)} kg</span>
+      </div>
+      <div class="pm">
+        <span class="pm-lbl">Salida neto −5%</span>
+        <span class="pm-val" style="color:${col}">${d.pvNeto.toFixed(1)} kg</span>
+      </div>
+      <div class="pm">
+        <span class="pm-lbl">Gan. peso</span>
+        <span class="pm-val" style="color:var(--green)">+${d.gk.toFixed(1)} kg</span>
+      </div>
+      <div class="pm">
+        <span class="pm-lbl">GDP</span>
+        <span class="pm-val" style="color:var(--blue)">${d.gdp.toFixed(3)}</span>
+      </div>
+      <div class="pm">
+        <span class="pm-lbl">Ing./cab</span>
+        <span class="pm-val" style="color:${col}">USD ${fU(ingCab)}</span>
+      </div>
+    </div>
+    <div class="pc-bar">
+      <div class="pc-bar-top">
+        <span>Ganancia de peso vs máximo lote</span>
+        <span>+${d.gk.toFixed(1)} kg</span>
+      </div>
+      <div class="pc-bar-track">
+        <div class="pc-bar-fill" style="width:${(d.gk/MAX_GK*100).toFixed(0)}%;background:${col}"></div>
+      </div>
+    </div>
+    <div class="pc-bottom">
+      <div class="pb-item">
+        <span class="pb-lbl">ROI nominal</span>
+        <span class="pb-val"><span class="rc ${rcls(d.roi)}">${d.roi}%</span></span>
+      </div>
+      <div class="pb-item">
+        <span class="pb-lbl">ROI anualizado</span>
+        <span class="pb-val"><span class="rc ${rcls(d.roia)}">${d.roia}%</span></span>
+      </div>
+    </div>`;
+  cardsEl.appendChild(card);
+});
+
+// ── TABLA COMPLETA ──
+const tbody = document.getElementById('tableBody');
+DATA.forEach(d=>{
+  const igcab = d.ing/d.c;
+  const tr = document.createElement('tr');
+  tr.innerHTML=`
+    <td>
+      <div class="pn">${d.p}</div>
+      <span class="pf">${d.f}</span>
+    </td>
+    <td class="num" style="font-weight:600;color:var(--t0)">${d.c}</td>
+    <td>
+      <div class="dias-wrap">
+        <span class="num">${d.d}</span>
+        <span class="dias-dot" style="background:${dcol(d.d)}"></span>
+      </div>
+    </td>
+    <td class="grp num">${d.pi.toFixed(1)} kg</td>
+    <td class="num c-m">${d.pv.toFixed(1)} kg</td>
+    <td class="num" style="color:var(--blue)">${d.pvNeto.toFixed(1)} kg</td>
+    <td>
+      <div class="gbar">
+        <div class="gbar-t"><div class="gbar-f" style="width:${(d.gk/MAX_GK*100).toFixed(0)}%"></div></div>
+        <span class="gbar-v">+${d.gk.toFixed(1)}</span>
+      </div>
+    </td>
+    <td class="num c-b">${d.gdp.toFixed(3)}</td>
+    <td class="grp num">${f0(igcab)}</td>
+    <td class="num c-m">${fU(igcab)}</td>
+    <td class="grp"><span class="rc ${rcls(d.roi)}">${d.roi}%</span></td>
+    <td><span class="rc ${rcls(d.roia)}">${d.roia}%</span></td>`;
+  tbody.appendChild(tr);
+});
+
+// Total row
+const tr2=document.createElement('tr');
+tr2.className='tot';
+tr2.innerHTML=`
+  <td style="font-weight:600">TOTAL / PROMEDIO</td>
+  <td class="num" style="font-weight:700;color:var(--t0)">${totCab}</td>
+  <td class="num c-m">${Math.round(wavg('d'))}</td>
+  <td class="grp num">${wavg('pi').toFixed(1)} kg</td>
+  <td class="num c-m">${wavg('pv').toFixed(1)} kg</td>
+  <td class="num" style="color:var(--blue)">${wavg('pvNeto').toFixed(1)} kg</td>
+  <td>
+    <div class="gbar">
+      <div class="gbar-t"><div class="gbar-f" style="width:${(wavg('gk')/MAX_GK*100).toFixed(0)}%"></div></div>
+      <span class="gbar-v">+${wavg('gk').toFixed(1)}</span>
+    </div>
+  </td>
+  <td class="num c-b">${wavg('gdp').toFixed(3)}</td>
+  <td class="grp num" style="font-weight:600">${f0(totIng/totCab)}</td>
+  <td class="num c-m">${fU(totIng/totCab)}</td>
+  <td class="grp c-m">—</td><td class="c-m">—</td>`;
+tbody.appendChild(tr2);
+</script>
+</body>
+</html>
